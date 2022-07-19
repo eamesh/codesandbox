@@ -10,4 +10,4 @@ services:
     volumes:
       - ./build/packages/app/www:/usr/share/nginx/html/
     ports:
-      - 80:80
+      - 28080:80
