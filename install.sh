@@ -3,7 +3,10 @@
 cd setup
 docker build -t codesandbox/build .
 
-cd ../ && rm -rf ./app && mkdir ./app
-docker run -it --rm -v app:/app codesandbox/build bash -c cd /workspace && cp -rf ./www/static/* ./packages/app/www/static && cp -rf /workspace /app
+cd ../ && rm -rf ./app
+container_id="$(docker run -t -d codesandbox/build /bin/bash)"
+docker cp $container_id:/workspace/ ./app
+docker rm $container_id
+# cp -rf ./app/www/static/* ./app/www/packages/app/www/static
 
 docker-compose up -d
