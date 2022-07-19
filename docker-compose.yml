@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+
+  # build package app
+  build:
+    build:
+      context: setup/
+    init: true
+    volumes:
+      - ./build:/build
+    command:
+      - yarn build:deps
+      - cd packages/app
+      - yarn run build:sandpack-sandbox
+      - cp -rf ../../www/static/* ./www/static
+      - cp -rf /workspace /build
+
+  # web service
+  app:
+    image: nginx
+    depends_on:
+      - build
+    volumes:
+      - ./build/packages/app/www:/usr/share/nginx/html/
+    ports:
+      - 80:80
