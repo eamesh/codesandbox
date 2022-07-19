@@ -5,8 +5,6 @@ services:
   # web service
   app:
     image: nginx
-    depends_on:
-      - build
     volumes:
       - ./build/packages/app/www:/usr/share/nginx/html/
     ports:
