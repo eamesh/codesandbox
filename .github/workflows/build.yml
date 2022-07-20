@@ -74,13 +74,12 @@ jobs:
 
     - name: Demo
       run: |
-        mkdir -p ./workdir/www
-        echo 123 >> ./workdir/www/node
+        echo 123 >> node
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: "workdir/www/**"
+        files: node
         toke: ${{ secrets.TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
