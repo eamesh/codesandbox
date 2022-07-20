@@ -83,11 +83,10 @@ jobs:
 
     - name: Release
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./www.tar.gz
-        asset_name: ww.tar.gz
-        asset_content_type: application/gzip
+        files: |
+          www.tar.gz
         token: ${{ secrets.TOKEN }}
 
     # - name: Docker Metadata action
