@@ -82,6 +82,7 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: "workdir/www/**"
+        toke: ${{ secrets.TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
