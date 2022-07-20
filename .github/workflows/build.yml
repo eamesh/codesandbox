@@ -32,62 +32,75 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
-    - name: Yarn lock
-      run: touch yarn.lock
+    # - name: Yarn lock
+    #   run: touch yarn.lock
 
-    - name: Clone source code
-      working-directory: /workdir
-      run: |
-        git clone $REPO_URL codesandbox
-        ln -sf /workdir/codesandbox $GITHUB_WORKSPACE/codesandbox
+    # - name: Clone source code
+    #   working-directory: /workdir
+    #   run: |
+    #     git clone $REPO_URL codesandbox
+    #     ln -sf /workdir/codesandbox $GITHUB_WORKSPACE/codesandbox
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
+    # - name: Use Node.js ${{ matrix.node-version }}
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: ${{ matrix.node-version }}
+    #     cache: 'yarn'
 
-    - name: Docker Login
-      # You may pin to the exact commit or the version.
-      # uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
-      uses: docker/login-action@v2.0.0
-      with:
-        # Username used to log against the Docker registry
-        username: ${{ secrets.USERNAME }}
-        # Password or personal access token used to log against the Docker registry
-        password: ${{ secrets.PASSWORD }}
+    # - name: Docker Login
+    #   # You may pin to the exact commit or the version.
+    #   # uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
+    #   uses: docker/login-action@v2.0.0
+    #   with:
+    #     # Username used to log against the Docker registry
+    #     username: ${{ secrets.USERNAME }}
+    #     # Password or personal access token used to log against the Docker registry
+    #     password: ${{ secrets.PASSWORD }}
 
-    - name: Yarn install
-      run: |
-        cd codesandbox
-        yarn
+    # - name: Yarn install
+    #   run: |
+    #     cd codesandbox
+    #     yarn
        
-    - name: Build deps
+    # - name: Build deps
+    #   run: |
+    #     cd codesandbox
+    #     yarn build:deps
+
+    # - name: Build
+    #   run: |
+    #     cd codesandbox
+    #     yarn build
+
+
+    - name: Demo
       run: |
-        cd codesandbox
-        yarn build:deps
+        mkdir -p ./workdir/www
+        echo 123 >> ./workdir/www/node
 
-    - name: Build
-      run: |
-        cd codesandbox
-        yarn build
+    - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ./codesandbox/www
 
-    - name: Docker Metadata action
-      # You may pin to the exact commit or the version.
-      # uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a
-      uses: docker/metadata-action@v4.0.1
-      id: meta
-      with:
-        # List of Docker images to use as base name for tags
-        images: easeava/codesandbox
+    # - name: Docker Metadata action
+    #   # You may pin to the exact commit or the version.
+    #   # uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a
+    #   uses: docker/metadata-action@v4.0.1
+    #   id: meta
+    #   with:
+    #     # List of Docker images to use as base name for tags
+    #     images: easeava/codesandbox
 
-    - name: Build and push Docker images
-      # You may pin to the exact commit or the version.
-      # uses: docker/build-push-action@1cb9d22b932e4832bb29793b7777ec860fc1cde0
-      uses: docker/build-push-action@v3.1.0
-      with:
-        context: ./codesandbox
-        push: true
-        labels: ${{ steps.meta.outputs.labels }}
-        tags: ${{ steps.meta.outputs.tags }}
+    # - name: Build and push Docker images
+    #   # You may pin to the exact commit or the version.
+    #   # uses: docker/build-push-action@1cb9d22b932e4832bb29793b7777ec860fc1cde0
+    #   uses: docker/build-push-action@v3.1.0
+    #   with:
+    #     context: ./codesandbox
+    #     push: true
+    #     labels: ${{ steps.meta.outputs.labels }}
+    #     tags: ${{ steps.meta.outputs.tags }}
         
