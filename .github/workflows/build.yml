@@ -13,9 +13,9 @@ jobs:
     name: Build Codesandbox
     env:
       REPO_URL: https://github.com/codesandbox/codesandbox-client.git
-      USERNAME: ${{ secrets.USERNAME }}
-      PASSWORD: ${{ secrets.PASSWORD }}
-      IMAGES: easeava/codesandbox
+      # USERNAME: ${{ secrets.USERNAME }}
+      # PASSWORD: ${{ secrets.PASSWORD }}
+      # IMAGES: easeava/codesandbox
     runs-on: ubuntu-latest
 
     strategy:
@@ -46,15 +46,15 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
 
-    - name: Docker Login
-      # You may pin to the exact commit or the version.
-      # uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
-      uses: docker/login-action@v2.0.0
-      with:
-        # Username used to log against the Docker registry
-        username: ${{ secrets.USERNAME }}
-        # Password or personal access token used to log against the Docker registry
-        password: ${{ secrets.PASSWORD }}
+    # - name: Docker Login
+    #   # You may pin to the exact commit or the version.
+    #   # uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
+    #   uses: docker/login-action@v2.0.0
+    #   with:
+    #     # Username used to log against the Docker registry
+    #     username: ${{ secrets.USERNAME }}
+    #     # Password or personal access token used to log against the Docker registry
+    #     password: ${{ secrets.PASSWORD }}
 
     - name: Yarn install
       run: |
