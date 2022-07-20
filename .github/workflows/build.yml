@@ -6,7 +6,7 @@ name: Node.js CI
 on:
   push:
     tags:
-      - "v1.0.2"
+      - "v*"
 
 jobs:
   build:
