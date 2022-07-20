@@ -26,12 +26,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+
+    - name: Clone source code
+      working-directory: /workdir
+      run: |
+        git clone $REPO_URL codesandbox
+        ln -sf /workdir/codesandbox $GITHUB_WORKSPACE/codesandbox
+        
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-        
+
     - run: yarn install --frozen-lockfile # optional, --immutable
     - run: yarn test
 
@@ -44,12 +52,6 @@ jobs:
         username: $USERNAME
         # Password or personal access token used to log against the Docker registry
         password: $PASSWORD
-
-    - name: Clone source code
-      working-directory: /workdir
-      run: |
-        git clone $REPO_URL codesandbox
-        ln -sf /workdir/codesandbox $GITHUB_WORKSPACE/codesandbox
 
     - name: Yarn install
       run: |
