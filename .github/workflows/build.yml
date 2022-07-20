@@ -55,9 +55,9 @@ jobs:
       uses: docker/login-action@v2.0.0
       with:
         # Username used to log against the Docker registry
-        username: $USERNAME
+        username: ${{ secrets.USERNAME }}
         # Password or personal access token used to log against the Docker registry
-        password: $PASSWORD
+        password: ${{ secrets.PASSWORD }}
 
     - name: Yarn install
       run: |
