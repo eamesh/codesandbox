@@ -32,6 +32,9 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
+    - name: Yarn lock
+      - run: touch yarn.lock
+
     - name: Clone source code
       working-directory: /workdir
       run: |
