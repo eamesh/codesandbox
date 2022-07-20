@@ -79,11 +79,12 @@ jobs:
         echo 123 >> ./workdir/www/node
 
     - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            ./codesandbox/www
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          ./codesandbox/www
+        token: ${{ secrets.TOKEN }}
 
     # - name: Docker Metadata action
     #   # You may pin to the exact commit or the version.
