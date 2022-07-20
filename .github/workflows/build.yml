@@ -6,7 +6,7 @@ name: Node.js CI
 on:
   push:
     tags:
-      - "v1.0.1"
+      - "v*"
 
 jobs:
   build:
@@ -80,7 +80,11 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: node
-        toke: ${{ secrets.TOKEN }}
+        token: ${{ secrets.TOKEN }}
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+        prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
