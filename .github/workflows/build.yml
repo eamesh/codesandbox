@@ -73,7 +73,7 @@ jobs:
 
     - name: Tar
       run: |
-        cd $$GITHUB_WORKSPACE/codesandbox/www
+        cd codesandbox/www
         tar -zcvf ../www.tar.gz ./*
 
     - name: Release
