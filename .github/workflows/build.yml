@@ -74,13 +74,13 @@ jobs:
     - name: Tar
       run: |
         cd codesandbox/www
-        tar -zcvf ../../www.tar.gz ./*
+        tar -zcvf $GITHUB_WORKSPACE/www.tar.gz ./*
 
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: www.tar.gz
+        files: $GITHUB_WORKSPACE/www.tar.gz
         token: ${{ secrets.TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
