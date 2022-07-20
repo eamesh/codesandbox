@@ -38,9 +38,9 @@ jobs:
       uses: docker/login-action@v2.0.0
       with:
         # Username used to log against the Docker registry
-        username: # optional
+        username: $USERNAME
         # Password or personal access token used to log against the Docker registry
-        password: # optional
+        password: $PASSWORD
 
     - name: Clone source code
       working-directory: /workdir
