@@ -9,15 +9,16 @@ on:
   pull_request:
     branches: [ "dev" ]
 
-env:
-  REPO_URL: https://github.com/codesandbox/codesandbox-client.git
-  USERNAME: ${{ secrets.USERNAME }}
-  PASSWORD: ${{ secrets.PASSWORD }}
-  IMAGES: easeava/codesandbox
+
 
 jobs:
   build:
-
+    name: Build Codesandbox
+    env:
+      REPO_URL: https://github.com/codesandbox/codesandbox-client.git
+      USERNAME: ${{ secrets.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      IMAGES: easeava/codesandbox
     runs-on: ubuntu-latest
 
     strategy:
