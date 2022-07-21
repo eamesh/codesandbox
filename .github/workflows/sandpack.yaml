@@ -1,0 +1,112 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Build Codesandbox
+    env:
+      REPO_URL: https://github.com/codesandbox/codesandbox-client.git
+      # USERNAME: ${{ secrets.USERNAME }}
+      # PASSWORD: ${{ secrets.PASSWORD }}
+      # IMAGES: easeava/codesandbox
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.22.1]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Initialization environment
+      run: |
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+
+    - name: Yarn lock
+      run: touch yarn.lock
+
+    - name: Clone source code
+      working-directory: /workdir
+      run: |
+        git clone $REPO_URL codesandbox
+        ln -sf /workdir/codesandbox $GITHUB_WORKSPACE/codesandbox
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+
+    # - name: Docker Login
+    #   # You may pin to the exact commit or the version.
+    #   # uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
+    #   uses: docker/login-action@v2.0.0
+    #   with:
+    #     # Username used to log against the Docker registry
+    #     username: ${{ secrets.USERNAME }}
+    #     # Password or personal access token used to log against the Docker registry
+    #     password: ${{ secrets.PASSWORD }}
+
+    - name: Yarn install
+      run: |
+        cd codesandbox
+        yarn
+       
+    - name: Build deps
+      run: |
+        cd codesandbox
+        yarn build:deps
+
+    - name: Build
+      run: |
+        cd codesandbox
+        yarn build
+        
+    - name: Build sandpack sandbox
+      run: |
+        cd codesandbox/packages/app
+        yarn build:sandpack-sandbox
+        cp -rf ../../www/static/* ./www/static
+
+    - name: Tar
+      run: |
+        cd codesandbox/packages/app/www
+        tar -zcvf $GITHUB_WORKSPACE/sandpack.tar.gz ./*
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: sandpack.tar.gz
+        token: ${{ secrets.TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+    # - name: Docker Metadata action
+    #   # You may pin to the exact commit or the version.
+    #   # uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a
+    #   uses: docker/metadata-action@v4.0.1
+    #   id: meta
+    #   with:
+    #     # List of Docker images to use as base name for tags
+    #     images: easeava/codesandbox
+
+    # - name: Build and push Docker images
+    #   # You may pin to the exact commit or the version.
+    #   # uses: docker/build-push-action@1cb9d22b932e4832bb29793b7777ec860fc1cde0
+    #   uses: docker/build-push-action@v3.1.0
+    #   with:
+    #     context: ./codesandbox
+    #     push: true
+    #     labels: ${{ steps.meta.outputs.labels }}
+    #     tags: ${{ steps.meta.outputs.tags }}
+        
