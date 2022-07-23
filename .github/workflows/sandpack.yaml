@@ -60,26 +60,24 @@ jobs:
       run: |
         cd codesandbox
         yarn
+        
+    - name: Build
+      run: |
+        cd codesandbox
+        yarn build
        
     - name: Build deps
       run: |
         cd codesandbox
         yarn build:deps
-
-    - name: Build
-      run: |
-        cd codesandbox
-        yarn build
         
     - name: Build sandpack sandbox
       run: |
-        cd codesandbox/packages/app
-        yarn build:sandpack-sandbox
-        cp -rf ../../www/static/* ./www/static
+        yarn build:sandpack
 
     - name: Tar
       run: |
-        cd codesandbox/packages/app/www
+        cd ./www
         tar -zcvf $GITHUB_WORKSPACE/sandpack.tar.gz ./*
 
     - name: Release
