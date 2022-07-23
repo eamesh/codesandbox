@@ -73,11 +73,12 @@ jobs:
         
     - name: Build sandpack sandbox
       run: |
+        cd codesandbox
         yarn build:sandpack
 
     - name: Tar
       run: |
-        cd ./www
+        cd codesandbox/www
         tar -zcvf $GITHUB_WORKSPACE/sandpack.tar.gz ./*
 
     - name: Release
